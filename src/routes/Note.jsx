@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom";
 import Col from "../components/Col";
 import Row from "../components/Row";
+import {Doc, getDoc} from 'firebase/firestore'
+import db from '../db.js'
 
 function Note () {
   const params = useParams()
@@ -9,6 +11,16 @@ function Note () {
     title: '',
     text: ''
   })
+
+  useEffect(() => {
+    getDoc(doc(db, 'notes', params.id))
+    .then( document => {
+      setNote({
+      title: document.data().title,
+      text: document.data().text
+      })
+  })
+   }, [])
 
   function changeHandler (e) {
 
